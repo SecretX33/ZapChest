@@ -6,7 +6,7 @@ import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
 import com.github.secretx33.zapchest.config.toComponent
-import com.github.secretx33.zapchest.repository.StorageRepo
+import com.github.secretx33.zapchest.repository.GroupRepo
 import com.github.secretx33.zapchest.util.extension.sendMessage
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.CommandSender
@@ -14,11 +14,11 @@ import org.bukkit.entity.Player
 
 class CreateGroupCommand(
     private val messages: Messages,
-    private val storageRepo: StorageRepo,
+    private val groupRepo: GroupRepo,
 ) : SubCommand() {
 
     override val name: String = "creategroup"
-    override val permission: String = "creategroup"
+    override val permission: String = "group.create"
     override val aliases: List<String> = listOf(name, "create", "cg")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
@@ -27,14 +27,16 @@ class CreateGroupCommand(
             return
         }
         val groupName = strings[1]
+        val group = groupRepo.getGroup(player, groupName)
 
-        val group = storageRepo.getGroup(player, groupName)
         when(group) {
             is None -> {
-                storageRepo.addGroup(player, groupName)
-                player.sendMessage(messages.get(MessageKeys.CREATED_GROUP).replace("<name>", groupName))
+                groupRepo.createGroup(player, groupName)
+                player.sendMessage(messages.get(MessageKeys.CREATED_GROUP)
+                    .replace("<group>", groupName))
             }
-            is Some -> player.sendMessage(messages.get(MessageKeys.CANNOT_CREATE_GROUP_ALREADY_EXISTS).replace("<name>", groupName))
+            is Some -> player.sendMessage(messages.get(MessageKeys.CANNOT_CREATE_GROUP_ALREADY_EXISTS)
+                .replace("<group>", groupName))
         }
     }
 

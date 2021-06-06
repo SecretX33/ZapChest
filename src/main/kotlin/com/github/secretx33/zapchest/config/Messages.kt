@@ -8,7 +8,7 @@ import net.kyori.adventure.text.ComponentLike
 import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextColor
 import org.bukkit.plugin.Plugin
-import java.util.*
+import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.io.path.Path
 
@@ -39,11 +39,17 @@ class Messages(plugin: Plugin, private val adventureMessage: AdventureMessage) {
 
 enum class MessageKeys(val default: Any) {
     CONSOLE_CANNOT_USE("<#FF5555>Sorry, the console cannot use this command."),
-    CANNOT_CREATE_GROUP_ALREADY_EXISTS("<#FF5555>You already own a group named <#FFAA00><name><#FF5555>, try with another name or remove that group by using <#FFAA00>/zapchest removegroup <name><#FF5555>."),
-    CREATED_GROUP("<#55FF55>Successfully created group <#FFAA00><name><#55FF55>!."),
+    CANNOT_CREATE_GROUP_ALREADY_EXISTS("<#FF5555>You already own a group named <#FFAA00><group><#FF5555>, try with another name or remove that group by using <#FFAA00>/zapchest removegroup <group><#FF5555>."),
+    CREATED_GROUP("<#55FF55>Successfully created group <#FFAA00><group><#55FF55>!."),
     CONFIGS_RELOADED("<#55FF55>Reloaded configs."),
-    INFERNAL_MOB_DEATH_MESSAGES(""),
-    INFERNAL_MOB_SPAWN_MESSAGES(""),
+    GROUP_NOT_FOUND("<#FF5555>Group named <#FFAA00><group><#FF5555> could not be found."),
+    PLAYER_NOT_FOUND("<#FF5555>Player named <#FFAA00><player><#FF5555> could not be found."),
+    PLAYER_ALREADY_IN_THAT_GROUP("<#FF5555>Player <#FFAA00><player><#FF5555> already belongs to group <#FFAA00><group><#FF5555>."),
+    INVITED_PLAYER_TO_GROUP("<#55FF55>Invited player <#FFAA00><player><#FF5555> to group <#FFAA00><group><#FF5555>!"),
+    RECEIVED_INVITE_TO_GROUP("<#2afab5><owner> invited you to join their zapchest group <group>, [click here](command: /zapchest acceptinvite <group>) to accept."),
+    INVITE_NOT_FOUND("<#FF5555>Invite for group <#FFAA00><group><#FF5555> could not be found."),
+    GROUP_WAS_DELETED("<#FF5555>Couldn't join group <#FFAA00><group><#FF5555> because it was deleted."),
+    SUCCESSFULLY_JOINED_GROUP("<#55FF55>You just joined <#FFAA00><group><#FF5555>!"),
     INFERNAL_MOB_TYPE_DOESNT_EXIST("<#FF5555>Sorry, the infernal type <type> <#FF5555>doesn't exist in your <#FFAA00>mobs.yml <#FF5555>file, please type a valid name."),
     INVALID_NUMBER("<#FF5555>Sorry, <#FFAA00><number> <#FF5555>is not a number."),
     KILLED_ALL_INFERNALS("<#55FF55>Killed all infernals from all worlds."),

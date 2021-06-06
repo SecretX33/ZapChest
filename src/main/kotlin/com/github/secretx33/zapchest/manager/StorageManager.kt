@@ -4,7 +4,7 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
 import com.github.secretx33.zapchest.model.Group
-import com.github.secretx33.zapchest.repository.StorageRepo
+import com.github.secretx33.zapchest.repository.GroupRepo
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.BlockInventoryHolder
@@ -12,13 +12,13 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 class StorageManager(
-    private val storageRepo: StorageRepo,
+    private val groupRepo: GroupRepo,
 ) {
 
     fun parseItemMove(holder: BlockInventoryHolder, player: Option<Player> = None) {
         val inventory = holder.inventory
         val location = inventory.location ?: return
-        val group = storageRepo.getSenderStorages()[location].takeIf { it.isNotEmpty() }?.bestGroup(player) ?: return
+        val group = groupRepo.getSenderStorages()[location].takeIf { it.isNotEmpty() }?.bestGroup(player) ?: return
 
         moveItems(inventory, group)
     }
