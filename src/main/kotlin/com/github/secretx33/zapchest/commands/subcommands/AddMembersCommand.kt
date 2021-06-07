@@ -5,6 +5,8 @@ import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
 import com.github.secretx33.zapchest.config.toComponent
+import com.github.secretx33.zapchest.manager.GroupInviteManager
+import com.github.secretx33.zapchest.model.toLocalPlayer
 import com.github.secretx33.zapchest.repository.GroupRepo
 import com.github.secretx33.zapchest.util.extension.sendMessage
 import net.kyori.adventure.text.format.NamedTextColor
@@ -15,11 +17,12 @@ import org.bukkit.entity.Player
 class AddMembersCommand(
     private val messages: Messages,
     private val groupRepo: GroupRepo,
+    private val groupInviteManager: GroupInviteManager,
 ) : SubCommand() {
 
     override val name: String = "addmember"
-    override val permission: String = "group.addothers"
-    override val aliases: List<String> = listOf(name, "addm")
+    override val permission: String = "groups.addothers"
+    override val aliases: List<String> = listOf(name, "addm", "am")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         if(strings.size < 3) {
@@ -32,21 +35,31 @@ class AddMembersCommand(
             return
         }
 
-        // player with specified name was not found
-        val newMember = Bukkit.getPlayerExact(strings[2]) ?: run { player.sendMessage(messages.get(MessageKeys.PLAYER_NOT_FOUND).replace("<player>", strings[2]))
-            return
-        }
+        // gets all players specified (up until 8 at a time)
+        var newMembers = strings.toList().subList(2, strings.size.coerceAtMost(10))
+            .mapNotNull { Bukkit.getPlayerExact(it) ?: run {
+                player.sendMessage(messages.get(MessageKeys.PLAYER_NOT_FOUND).replace("<player>", strings[2]))
+                null }
+            }
 
         // player is already member of that group
-        if(newMember.uniqueId in group.members) {
+        newMembers.filter { it.toLocalPlayer() in group.members }.forEach { newMember ->
             player.sendMessage(messages.get(MessageKeys.PLAYER_ALREADY_IN_THAT_GROUP).replace("<player>", newMember.name).replace("<group>", group.name))
             return
         }
 
-        // invites newMember to the group
-        player.sendMessage(messages.get(MessageKeys.INVITED_PLAYER_TO_GROUP).replace("<player>", newMember.name).replace("<group>", group.name))
+        // filter to only members that are not already in the group
+        newMembers = newMembers.filter { it.toLocalPlayer() !in group.members }
 
-        newMember.sendMessage(messages.get(MessageKeys.RECEIVED_INVITE_TO_GROUP).replace("<owner>", newMember.name).replace("<group>", group.name))
+        // inform group owner about invites
+        val newMembersNames = newMembers.takeIf { it.isNotEmpty() }?.sortedBy { it.name }?.joinToString { it.name } ?: return
+        player.sendMessage(messages.get(MessageKeys.INVITED_PLAYERS_TO_GROUP).replace("<players>", newMembersNames).replace("<group>", group.name))
+
+        // invites newMembers to the group
+        newMembers.forEach {
+            groupInviteManager.createInvite(it, group)
+            it.sendMessage(messages.get(MessageKeys.RECEIVED_INVITE_TO_GROUP).replace("<owner>", player.name).replace("<group>", group.name))
+        }
     }
 
     override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {

@@ -18,7 +18,7 @@ class CreateGroupCommand(
 ) : SubCommand() {
 
     override val name: String = "creategroup"
-    override val permission: String = "group.create"
+    override val permission: String = "groups.create"
     override val aliases: List<String> = listOf(name, "create", "cg")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
@@ -45,6 +45,7 @@ class CreateGroupCommand(
     }
 
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> = when {
+        sender !is Player -> emptyList()
         length == 1 && hint.isBlank() -> listOf("<group_name>")
         else -> emptyList()
     }

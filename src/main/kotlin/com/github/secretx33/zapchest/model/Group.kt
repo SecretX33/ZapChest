@@ -3,12 +3,11 @@ package com.github.secretx33.zapchest.model
 import org.bukkit.Material
 import java.util.Locale
 import java.util.Objects
-import java.util.UUID
 
 data class Group(
     val name: String,
-    val owner: UUID,
-    val members: Set<UUID> = emptySet(),
+    val owner: LocalPlayer,
+    val members: Set<LocalPlayer> = emptySet(),
     val senders: Set<Storage> = emptySet(),
     val receivers: Set<Storage> = emptySet(),
 ) {

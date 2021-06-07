@@ -1,0 +1,46 @@
+name: ${name}
+version: ${version}
+main: ${mainClass}
+api-version: 1.16
+authors: [SecretX]
+description: Links and control the flows of items between chests
+website: https://github.com/SecretX33
+
+commands:
+  zapchest:
+    description: ${name}
+    usage: /<command> <sub> [parameters]
+    aliases: [infernalmobs, mobs]
+
+permissions:
+
+  zapchest.*:
+    description: Gives access to all ${name} commands. Default to players with op.
+    default: op
+    children:
+      zapchest.reload: true
+      zapchest.groups.*: true
+
+  zapchest.groups.*:
+    description: Gives access to all groups features.
+    default: false
+    children:
+      zapchest.groups.create: true
+      zapchest.groups.addothers: true
+      zapchest.groups.joinothers: true
+
+  zapchest.reload:
+    description: Allows one to reload all plugin configurations.
+    default: false
+
+  zapchest.groups.create:
+    description: Allows one to create zap groups to link chests.
+    default: false
+
+  zapchest.groups.addothers:
+    description: Allows one to invite other people to join their groups.
+    default: false
+
+  zapchest.groups.joinothers:
+    description: Allows one to be invited to join other people groups.
+    default: false

@@ -17,6 +17,6 @@ class WorldUnloadListener(
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private fun WorldUnloadEvent.onWorldUnload(){
-
+        TODO("Process world unload, removing all groups related from it of memory")
     }
 }

@@ -10,18 +10,22 @@ import net.kyori.adventure.text.format.TextColor
 import org.bukkit.plugin.Plugin
 import java.util.Locale
 import java.util.concurrent.ConcurrentHashMap
+import java.util.logging.Logger
 import kotlin.io.path.Path
 
-class Messages(plugin: Plugin, private val adventureMessage: AdventureMessage) {
-    private val manager = YamlManager(plugin, plugin.dataFolder.toPath(), Path("messages"), plugin.logger, ConfigOptions())
+class Messages(plugin: Plugin, logger: Logger, private val adventureMessage: AdventureMessage) {
+    private val manager = YamlManager(plugin, plugin.dataFolder.toPath(), Path("messages"), logger, ConfigOptions())
     private val stringCache = ConcurrentHashMap<MessageKeys, Component>()
     private val listCache = ConcurrentHashMap<MessageKeys, List<Component>>()
+
+    init {
+        manager.listener { logger.info("[FileWatcher] Detected changes on file ${manager.fileName}, reapplying configs.") }
+    }
 
     fun get(key: MessageKeys, default: String? = null): Component
         = stringCache.getOrPut(key) {
             manager.getString(key.configEntry)?.parse() ?: default?.parse() ?: (key.default as? Component) ?: (key.default as String).parse()
         }
-
 
     fun getList(key: MessageKeys): List<Component>
         = listCache.getOrPut(key) {
@@ -45,11 +49,12 @@ enum class MessageKeys(val default: Any) {
     GROUP_NOT_FOUND("<#FF5555>Group named <#FFAA00><group><#FF5555> could not be found."),
     PLAYER_NOT_FOUND("<#FF5555>Player named <#FFAA00><player><#FF5555> could not be found."),
     PLAYER_ALREADY_IN_THAT_GROUP("<#FF5555>Player <#FFAA00><player><#FF5555> already belongs to group <#FFAA00><group><#FF5555>."),
-    INVITED_PLAYER_TO_GROUP("<#55FF55>Invited player <#FFAA00><player><#FF5555> to group <#FFAA00><group><#FF5555>!"),
+    INVITED_PLAYERS_TO_GROUP("<#55FF55>Invited players <#FFAA00><players><#FF5555> to group <#FFAA00><group><#FF5555>!"),
     RECEIVED_INVITE_TO_GROUP("<#2afab5><owner> invited you to join their zapchest group <group>, [click here](command: /zapchest acceptinvite <group>) to accept."),
     INVITE_NOT_FOUND("<#FF5555>Invite for group <#FFAA00><group><#FF5555> could not be found."),
     GROUP_WAS_DELETED("<#FF5555>Couldn't join group <#FFAA00><group><#FF5555> because it was deleted."),
     SUCCESSFULLY_JOINED_GROUP("<#55FF55>You just joined <#FFAA00><group><#FF5555>!"),
+    STORAGE_WAS_DESTROYED("<#FF5555>You just broke a Storage, as result it was unbounded from all groups it belonged."),
     INFERNAL_MOB_TYPE_DOESNT_EXIST("<#FF5555>Sorry, the infernal type <type> <#FF5555>doesn't exist in your <#FFAA00>mobs.yml <#FF5555>file, please type a valid name."),
     INVALID_NUMBER("<#FF5555>Sorry, <#FFAA00><number> <#FF5555>is not a number."),
     KILLED_ALL_INFERNALS("<#55FF55>Killed all infernals from all worlds."),

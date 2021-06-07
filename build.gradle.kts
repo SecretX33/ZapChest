@@ -27,7 +27,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.2")
     compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT") // Spigot API dependency
-    compileOnly(fileTree("libs"))      // Paper server dependency
+    compileOnly(fileTree("libs"))      // Spigot server dependency
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.+")
     implementation("com.github.secretx33:secret-cfg-bukkit:1.0-SNAPSHOT")
     implementation("io.arrow-kt:arrow-core:0.13.+")
@@ -37,7 +37,6 @@ dependencies {
     implementation("com.github.cryptomorin:XSeries:7.9.1.1")
     implementation("net.kyori:adventure-platform-bukkit:4.0.0-SNAPSHOT")
     implementation("me.mattstudios:triumph-msg-adventure:2.2.4-SNAPSHOT")
-//    compileOnly("com.comphenix.protocol:ProtocolLib:4.6.0")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.4")
     implementation("com.zaxxer:HikariCP:4.0.+")
 }
@@ -61,13 +60,20 @@ tasks.shadowJar {
     relocate("org.slf4j", "${dependencyPackage}.slf4j")
     relocate("kotlin", "${dependencyPackage}.kotlin")
     relocate("kotlinx", "${dependencyPackage}.kotlinx")
-    relocate("org.jetbrains", "${dependencyPackage}.jetbrains")
-    relocate("org.intellij", "${dependencyPackage}.jetbrains.intellij")
     relocate("com.cryptomorin.xseries", "${dependencyPackage}.xseries")
     relocate("me.mattstudios.msg", "${dependencyPackage}.mfmsg")
+    relocate("arrow", "${dependencyPackage}.arrow")
+    relocate("io.kindedj", "${dependencyPackage}.arrow.kindedj")
+    relocate("com.github.secretx33.secretcfg", "${dependencyPackage}.secretcfg")
+    relocate("org.spongepowered.configurate", "${dependencyPackage}.secretcfg.configurate")
+    relocate("org.yaml.snakeyaml", "${dependencyPackage}.secretcfg.snakeyaml")
+    relocate("io.leangen.geantyref", "${dependencyPackage}.secretcfg.geantyref")
+    relocate("net.kyori", "${dependencyPackage}.kyori")
     exclude("ScopeJVMKt.class")
     exclude("DebugProbesKt.bin")
     exclude("META-INF/**")
+    exclude("org.jetbrains")
+    exclude("org.intellij")
 }
 
 tasks.withType<JavaCompile> {

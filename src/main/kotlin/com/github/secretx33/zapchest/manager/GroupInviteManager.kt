@@ -20,7 +20,7 @@ class GroupInviteManager (
 
     fun acceptInvite(player: Player, groupName: String): GroupJoinResponse {
         val group = invites.getIfPresent(Pair(player.uniqueId, groupName))
-            ?.takeIf { it.first < System.currentTimeMillis() }?.second
+            ?.takeIf { it.first > System.currentTimeMillis() }?.second
             ?: return GroupJoinResponse.NON_EXISTENT
 
         invites.invalidate(player.uniqueId)

@@ -1,18 +1,13 @@
 package com.github.secretx33.zapchest.model
 
 import com.github.secretx33.zapchest.util.extension.compareBlockLocation
-import com.github.secretx33.zapchest.util.extension.formattedString
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.World
 import org.bukkit.block.Block
-import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
 import org.bukkit.inventory.BlockInventoryHolder
-import org.bukkit.inventory.DoubleChestInventory
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.InventoryHolder
 import java.util.Objects
 import java.util.UUID
 

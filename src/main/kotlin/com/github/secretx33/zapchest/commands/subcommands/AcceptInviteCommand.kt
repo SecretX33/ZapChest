@@ -12,13 +12,13 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.Locale
 
-class AcceptInviteCommand(
+class AcceptInviteCommand (
     private val messages: Messages,
     private val groupInviteManager: GroupInviteManager,
 ) : SubCommand() {
 
     override val name: String = "acceptinvite"
-    override val permission: String = "group.joinothers"
+    override val permission: String = "groups.joinothers"
     override val aliases: List<String> = listOf(name, "accept", "ai")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {

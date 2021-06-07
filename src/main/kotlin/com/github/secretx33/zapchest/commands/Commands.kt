@@ -1,19 +1,27 @@
 package com.github.secretx33.zapchest.commands
 
+import com.github.secretx33.zapchest.commands.subcommands.AcceptInviteCommand
+import com.github.secretx33.zapchest.commands.subcommands.AddMembersCommand
+import com.github.secretx33.zapchest.commands.subcommands.CreateGroupCommand
+import com.github.secretx33.zapchest.commands.subcommands.ReloadCommand
 import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.util.other.CustomKoinComponent
+import com.github.secretx33.zapchest.util.other.get
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
-import org.bukkit.command.defaults.ReloadCommand
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.util.Locale
 
-class Commands(plugin: JavaPlugin) : CommandExecutor, TabCompleter {
+class Commands(plugin: JavaPlugin) : CommandExecutor, TabCompleter, CustomKoinComponent {
 
     private val subcommands: Set<SubCommand> = setOf(
-        ReloadCommand(),
+        AcceptInviteCommand(get(), get()),
+        AddMembersCommand(get(), get(), get()),
+        CreateGroupCommand(get(), get()),
+        ReloadCommand(get()),
     )
 
     init {

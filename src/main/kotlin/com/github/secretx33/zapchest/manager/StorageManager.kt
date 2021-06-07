@@ -4,12 +4,11 @@ import arrow.core.None
 import arrow.core.Option
 import arrow.core.Some
 import com.github.secretx33.zapchest.model.Group
+import com.github.secretx33.zapchest.model.toLocalPlayer
 import com.github.secretx33.zapchest.repository.GroupRepo
-import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.ItemStack
 
 class StorageManager(
     private val groupRepo: GroupRepo,
@@ -18,14 +17,14 @@ class StorageManager(
     fun parseItemMove(holder: BlockInventoryHolder, player: Option<Player> = None) {
         val inventory = holder.inventory
         val location = inventory.location ?: return
-        val group = groupRepo.getSenderStorages()[location].takeIf { it.isNotEmpty() }?.bestGroup(player) ?: return
+        val groups = groupRepo.getSenderGroupsAt(location).takeIf { it.isNotEmpty() }?.filterGroups(player)
+            ?: return
 
-        moveItems(inventory, group)
+        groups.forEach { moveItems(inventory, it) }
     }
 
     private fun moveItems(inventory: Inventory, group: Group) {
-        inventory.contents.forEachIndexed { index, item: ItemStack? ->
-            if (item == null || item.type.isAir) return@forEachIndexed
+        inventory.contents.filter { it?.type?.isAir == false }.forEach outerLoop@{ item ->
             val receivers = group.receiversFor(item.type)
 
             receivers.forEach {
@@ -34,17 +33,19 @@ class StorageManager(
                 // all items fit in the inventory
                 if (leftover.isEmpty()) {
                     item.amount = 0
-                    item.type = Material.AIR
-                    return@forEachIndexed
+                } else {
+                    item.amount -= item.amount - (leftover[0]?.amount ?: 0)
                 }
-                item.amount -= item.amount - (leftover[0]?.amount ?: 0)
-                if (item.amount <= 0) return@forEachIndexed
+                if (item.amount <= 0) return@outerLoop
             }
         }
     }
 
-    private fun Collection<Group>.bestGroup(player: Option<Player>): Group = when(player) {
-        is Some -> firstOrNull { it.owner == player.value.uniqueId } ?: first()
-        is None -> first()
+    private fun Collection<Group>.filterGroups(player: Option<Player>): Collection<Group> = when(player) {
+        is Some -> {
+            val localPlayer = player.value.toLocalPlayer()
+            filter { it.owner == localPlayer } + filter { localPlayer in it.members }
+        }
+        is None -> this
     }
 }
