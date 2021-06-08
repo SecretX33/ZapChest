@@ -2,6 +2,7 @@ package com.github.secretx33.zapchest.config
 
 import com.github.secretx33.secretcfg.core.config.ConfigOptions
 import com.github.secretx33.secretcfg.core.manager.YamlManager
+import kotlinx.coroutines.delay
 import me.mattstudios.msg.adventure.AdventureMessage
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.ComponentLike
@@ -19,7 +20,11 @@ class Messages(plugin: Plugin, logger: Logger, private val adventureMessage: Adv
     private val listCache = ConcurrentHashMap<MessageKeys, List<Component>>()
 
     init {
-        manager.listener { logger.info("[FileWatcher] Detected changes on file ${manager.fileName}, reapplying configs.") }
+        manager.listener {
+            logger.info("[FileWatcher] Detected changes on file ${manager.fileName}, reapplying configs.")
+            delay(150L)
+            reload()
+        }
     }
 
     fun get(key: MessageKeys, default: String? = null): Component
@@ -33,40 +38,40 @@ class Messages(plugin: Plugin, logger: Logger, private val adventureMessage: Adv
         }
 
     suspend fun reload() {
+        manager.reload()
         stringCache.clear()
         listCache.clear()
-        manager.reload()
     }
 
     private fun String.parse(): Component = adventureMessage.parse(this)
 }
 
 enum class MessageKeys(val default: Any) {
-    CONSOLE_CANNOT_USE("<#FF5555>Sorry, the console cannot use this command."),
+    ADDED_BLOCK_AS_RECEIVER("<#55FF55>Successfully added block <block> as receiver of group <#FFAA00><group>."),
+    ADDED_BLOCK_AS_SENDER("<#55FF55>Successfully added block <block> as sender of group <#FFAA00><group>."),
+    BLOCK_IS_ALREADY_RECEIVER("<#FF5555>The block you're currently aiming at (<block>) is already added as receiver of group <#FFAA00><group><#FF5555>."),
+    BLOCK_IS_ALREADY_SENDER("<#FF5555>The block you're currently aiming at (<block>) is already added as sender of group <#FFAA00><group><#FF5555>."),
+    BLOCK_IS_NOT_INVENTORY_HOLDER("<#FF5555>The block you're currently aiming at (<block>) cannot hold items, thus it cannot be added to any ZapChest group."),
+    CANNOT_ADD_RECEIVER_AS_SENDER("<#FF5555>The block you're currently aiming at (<block>) is already added as receiver of group <#FFAA00><group><#FF5555>. If you want to add it as sender, please remove it first by using <#FFAA00>/zapchest removereceiver <group><#FF5555>."),
+    CANNOT_ADD_SENDER_AS_RECEIVER("<#FF5555>The block you're currently aiming at (<block>) is already added as sender of group <#FFAA00><group><#FF5555>. If you want to add it as receiver, please remove it first by using <#FFAA00>/zapchest removesender <group><#FF5555>."),
     CANNOT_CREATE_GROUP_ALREADY_EXISTS("<#FF5555>You already own a group named <#FFAA00><group><#FF5555>, try with another name or remove that group by using <#FFAA00>/zapchest removegroup <group><#FF5555>."),
-    CREATED_GROUP("<#55FF55>Successfully created group <#FFAA00><group><#55FF55>!."),
     CONFIGS_RELOADED("<#55FF55>Reloaded configs."),
+    CONSOLE_CANNOT_USE("<#FF5555>Sorry, the console cannot use this command."),
+    CREATED_GROUP("<#55FF55>Successfully created group <#FFAA00><group><#55FF55>."),
     GROUP_NOT_FOUND("<#FF5555>Group named <#FFAA00><group><#FF5555> could not be found."),
-    PLAYER_NOT_FOUND("<#FF5555>Player named <#FFAA00><player><#FF5555> could not be found."),
+    GROUP_WAS_DELETED("<#FF5555>Couldn't join ZapChest group <#FFAA00><group><#FF5555> because it was deleted."),
+    INVITE_NOT_FOUND("<#FF5555>Invite for ZapChest group <#FFAA00><group><#FF5555> could not be found."),
+    INVITED_PLAYERS_TO_GROUP("<#55FF55>Invited player(s) <#FFAA00><players><#55FF55> to group <#FFAA00><group><#55FF55>!"),
     PLAYER_ALREADY_IN_THAT_GROUP("<#FF5555>Player <#FFAA00><player><#FF5555> already belongs to group <#FFAA00><group><#FF5555>."),
-    INVITED_PLAYERS_TO_GROUP("<#55FF55>Invited players <#FFAA00><players><#FF5555> to group <#FFAA00><group><#FF5555>!"),
-    RECEIVED_INVITE_TO_GROUP("<#2afab5><owner> invited you to join their zapchest group <group>, [click here](command: /zapchest acceptinvite <group>) to accept."),
-    INVITE_NOT_FOUND("<#FF5555>Invite for group <#FFAA00><group><#FF5555> could not be found."),
-    GROUP_WAS_DELETED("<#FF5555>Couldn't join group <#FFAA00><group><#FF5555> because it was deleted."),
-    SUCCESSFULLY_JOINED_GROUP("<#55FF55>You just joined <#FFAA00><group><#FF5555>!"),
+    PLAYER_GROUP_LIST_MEMBER_OF_GROUP_SUFFIX("(member)"),
+    PLAYER_GROUP_LIST_OWNER_GROUP_SUFFIX("(owner)"),
+    PLAYER_GROUPS_LIST("[ZapChest] <#55FF55>You currently are is these group(s): <#FFAA00><groups><#55FF55>."),
+    PLAYER_IS_NOT_IN_ANY_GROUP("<#55FF55>You currently don't own or belong to any group."),
+    PLAYER_JOINED_GROUP("<#55FF55>Player <#FFAA00><player><#55FF55> just joined ZapChest group <#FFAA00><group><#55FF55>!"),
+    PLAYER_NOT_FOUND("<#FF5555>Player named <#FFAA00><player><#FF5555> could not be found."),
+    RECEIVED_INVITE_TO_GROUP("<#2afab5><owner> invited you to join their ZapChest group <#FFAA00><group><#2afab5>\n[<#55FF55>**\\[accept\\]**](command: /zapchest acceptinvite <group>)"),
     STORAGE_WAS_DESTROYED("<#FF5555>You just broke a Storage, as result it was unbounded from all groups it belonged."),
-    INFERNAL_MOB_TYPE_DOESNT_EXIST("<#FF5555>Sorry, the infernal type <type> <#FF5555>doesn't exist in your <#FFAA00>mobs.yml <#FF5555>file, please type a valid name."),
-    INVALID_NUMBER("<#FF5555>Sorry, <#FFAA00><number> <#FF5555>is not a number."),
-    KILLED_ALL_INFERNALS("<#55FF55>Killed all infernals from all worlds."),
-    LOOT_ITEM_DOESNT_EXIST("<#FF5555>Sorry, loot item named <#FFAA00><item> <#FF5555>doesn't exist."),
-    NOT_TARGETING_INFERNAL("<#FF5555>The entity you're currently targeting is not an Infernal Mob, please target an Infernal Mob and try again."),
-    NOT_TARGETING_LIVING_ENTITY("<#FF5555>You are not targeting an entity, please aim to an entity and try again."),
-    NOT_TARGETING_VALID_INFERNAL("<#FF5555>The entity you're currently targeting was an Infernal Mob from mob category <group>, but this mob category is not present on your mobs.yml file, so it's not currently considered an Infernal Mob."),
-    RECEIVED_LOOT_ITEM("<#55FF55>Received <#FFAA00><amount> <#55FF55>of <#FFAA00><item>."),
-    RUST_CORRODE_TOOLS_MESSAGE("<#c27c21>You feel your tools corroding at your hands."),
-    TARGETING_INFERNAL("<#55FF55>The <#00AA00><entity> <#55FF55>you're currently targeting has the following abilities: <#ffb319><abilities>."),
-    THIEF_MESSAGE_TO_TARGET("<#55FFFF>Woah, beware! <entity> <#55FFFF>stole your <#FFFFFF><item>."),
-    THIEF_MESSAGE_TO_TARGET_ITEM_BROKE("<#55FFFF>Woah, beware! <entity> <#55FFFF>stole your <#FFFFFF><item><#55FFFF>, and unfortunately it broke in the process.");
+    SUCCESSFULLY_JOINED_GROUP("<#55FF55>You just joined ZapChest group <#FFAA00><group><#55FF55>.");
 
     val configEntry = name.lowercase(Locale.US).replace('_','-')
 }

@@ -34,7 +34,7 @@ class ZapChest : JavaPlugin(), CustomKoinComponent {
         single { BukkitAudiences.create(get()) }
         single { Config(get(), get()) }
         single { Messages(get(), get(), get()) }
-        single { SQLite(get(), get()) }
+        single { SQLite(get(), get(), get()) }
         single { GroupRepo(get()) }
         single { StorageManager(get()) }
         single { GroupInviteManager(get()) }

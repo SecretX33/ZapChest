@@ -1,7 +1,8 @@
-package com.github.secretx33.zapchest.commands.subcommands
+package com.github.secretx33.zapchest.commands.subcommands.group
 
 import arrow.core.None
 import arrow.core.Some
+import com.github.secretx33.zapchest.commands.subcommands.SubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -26,7 +27,7 @@ class CreateGroupCommand(
             player.sendMessage("Usage: /$alias $name <group_name>".toComponent(NamedTextColor.RED))
             return
         }
-        val groupName = strings[1]
+        val groupName = strings[1].substring(0, strings[1].length.coerceAtMost(40))
         val group = groupRepo.getGroup(player, groupName)
 
         when(group) {
@@ -46,7 +47,7 @@ class CreateGroupCommand(
 
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> = when {
         sender !is Player -> emptyList()
-        length == 1 && hint.isBlank() -> listOf("<group_name>")
+        length == 2 && hint.isBlank() -> listOf("<group_name>")
         else -> emptyList()
     }
 }

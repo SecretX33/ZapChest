@@ -1,6 +1,7 @@
-package com.github.secretx33.zapchest.commands.subcommands
+package com.github.secretx33.zapchest.commands.subcommands.invite
 
 import arrow.core.getOrElse
+import com.github.secretx33.zapchest.commands.subcommands.SubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -14,13 +15,13 @@ import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
-class AddMembersCommand(
+class InviteMembersCommand(
     private val messages: Messages,
     private val groupRepo: GroupRepo,
     private val groupInviteManager: GroupInviteManager,
 ) : SubCommand() {
 
-    override val name: String = "addmember"
+    override val name: String = "invitemembers"
     override val permission: String = "groups.addothers"
     override val aliases: List<String> = listOf(name, "addm", "am")
 
@@ -40,7 +41,7 @@ class AddMembersCommand(
             .mapNotNull { Bukkit.getPlayerExact(it) ?: run {
                 player.sendMessage(messages.get(MessageKeys.PLAYER_NOT_FOUND).replace("<player>", strings[2]))
                 null }
-            }
+            }.filter { it.uniqueId != player.uniqueId }  // player cannot invite themselves
 
         // player is already member of that group
         newMembers.filter { it.toLocalPlayer() in group.members }.forEach { newMember ->
@@ -67,12 +68,17 @@ class AddMembersCommand(
     }
 
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> {
-        if(sender !is Player) return emptyList()
+        if(sender !is Player || length < 2) return emptyList()
 
-        if(length == 1) return groupRepo.getGroups(sender).filter { it.name.startsWith(hint, ignoreCase = true) }.map { it.name }
+        if(length == 2) {
+            if(hint.isNotBlank()) return emptyList()
+            val groups = groupRepo.getGroupsThatPlayerOwns(sender)
+
+            return groups.takeIf { it.isNotEmpty() }?.filter { it.name.startsWith(hint, ignoreCase = true) }?.map { it.name } ?: listOf("<none>")
+        }
 
         return Bukkit.getOnlinePlayers().asSequence()
-            .filter { it.name.startsWith(hint, ignoreCase = true) }
+            .filter { it.uniqueId != sender.uniqueId && it.name.startsWith(hint, ignoreCase = true) }
             .map { it.name }
             .toList()
     }

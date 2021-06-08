@@ -13,7 +13,6 @@ import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryAction
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.plugin.Plugin
 
@@ -36,14 +35,14 @@ class PlayerItemMoveToStorageListener(
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private fun InventoryClickEvent.onItemMove() {
-        if(didNothing || isItemPlace) return
+        if(didNothing || !isItemPlace) return
         val holder = view.topInventory.holder as? BlockInventoryHolder ?: return
         val player = whoClicked as? Player ?: return
         // perform item move tasks
         runSync(plugin, 50L) { player.parseItemMove(holder) }
     }
 
-    private val InventoryClickEvent.didNothing get() = clickedInventory == null || clickedInventory?.type == InventoryType.PLAYER || action == InventoryAction.NOTHING
+    private val InventoryClickEvent.didNothing get() = clickedInventory == null || action == InventoryAction.NOTHING
 
     private fun Player.parseItemMove(holder: BlockInventoryHolder) = storageManager.parseItemMove(holder, this.some())
 }

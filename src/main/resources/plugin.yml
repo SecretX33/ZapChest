@@ -10,7 +10,7 @@ commands:
   zapchest:
     description: ${name}
     usage: /<command> <sub> [parameters]
-    aliases: [infernalmobs, mobs]
+    aliases: [zc]
 
 permissions:
 
@@ -28,6 +28,8 @@ permissions:
       zapchest.groups.create: true
       zapchest.groups.addothers: true
       zapchest.groups.joinothers: true
+      zapchest.groups.listgroups: true
+      zapchest.groups.addstorage: true
 
   zapchest.reload:
     description: Allows one to reload all plugin configurations.
@@ -43,4 +45,12 @@ permissions:
 
   zapchest.groups.joinothers:
     description: Allows one to be invited to join other people groups.
+    default: false
+
+  zapchest.groups.listgroups:
+    description: Allows one to be list all groups the player is currently in.
+    default: false
+
+  zapchest.groups.addstorage:
+    description: Allows one to add and remove storage from groups they own.
     default: false

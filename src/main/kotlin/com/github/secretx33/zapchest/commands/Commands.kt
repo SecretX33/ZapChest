@@ -1,10 +1,13 @@
 package com.github.secretx33.zapchest.commands
 
-import com.github.secretx33.zapchest.commands.subcommands.AcceptInviteCommand
-import com.github.secretx33.zapchest.commands.subcommands.AddMembersCommand
-import com.github.secretx33.zapchest.commands.subcommands.CreateGroupCommand
 import com.github.secretx33.zapchest.commands.subcommands.ReloadCommand
 import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.group.CreateGroupCommand
+import com.github.secretx33.zapchest.commands.subcommands.group.ListGroupsCommand
+import com.github.secretx33.zapchest.commands.subcommands.invite.AcceptInviteCommand
+import com.github.secretx33.zapchest.commands.subcommands.invite.InviteMembersCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.AddReceiverCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.AddSenderCommand
 import com.github.secretx33.zapchest.util.other.CustomKoinComponent
 import com.github.secretx33.zapchest.util.other.get
 import org.bukkit.command.Command
@@ -18,9 +21,12 @@ import java.util.Locale
 class Commands(plugin: JavaPlugin) : CommandExecutor, TabCompleter, CustomKoinComponent {
 
     private val subcommands: Set<SubCommand> = setOf(
-        AcceptInviteCommand(get(), get()),
-        AddMembersCommand(get(), get(), get()),
         CreateGroupCommand(get(), get()),
+        ListGroupsCommand(get(), get()),
+        AcceptInviteCommand(get(), get()),
+        InviteMembersCommand(get(), get(), get()),
+        AddReceiverCommand(get(), get()),
+        AddSenderCommand(get(), get()),
         ReloadCommand(get()),
     )
 

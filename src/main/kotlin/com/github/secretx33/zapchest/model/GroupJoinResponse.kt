@@ -1,7 +1,14 @@
 package com.github.secretx33.zapchest.model
 
-enum class GroupJoinResponse {
-    GROUP_REMOVED,
-    JOINED,
-    NON_EXISTENT,
+data class GroupJoinResponse(
+    val reason: Reason,
+    val group: Group?,
+) {
+    enum class Reason {
+        GROUP_REMOVED,
+        JOINED,
+        NON_EXISTENT,
+    }
 }
+
+

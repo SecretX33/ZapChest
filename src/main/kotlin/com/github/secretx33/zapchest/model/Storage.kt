@@ -1,6 +1,7 @@
 package com.github.secretx33.zapchest.model
 
 import com.github.secretx33.zapchest.util.extension.compareBlockLocation
+import com.github.secretx33.zapchest.util.extension.formattedLocation
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -19,8 +20,8 @@ class Storage(block: Block, val acceptMaterials: Set<Material>) {
     val z: Int
 
     init {
-        require(block.state is BlockInventoryHolder) { "Block at position ${formattedLocation()} is not a BlockInventoryHolder" }
-        val location = (block.state as BlockInventoryHolder).inventory.location ?: throw IllegalStateException("BlockInventoryHolder at position ${formattedLocation()} have no location, that should not be possible")
+        require(block.state is BlockInventoryHolder) { "Block at position ${block.formattedLocation()} is not a BlockInventoryHolder" }
+        val location = (block.state as BlockInventoryHolder).inventory.location ?: throw IllegalStateException("BlockInventoryHolder at position ${block.formattedLocation()} have no location, that shouldn't be possible")
         x = location.blockX
         y = location.blockY
         z = location.blockZ
@@ -29,7 +30,7 @@ class Storage(block: Block, val acceptMaterials: Set<Material>) {
     val block: Block
         get() {
             val world = Bukkit.getWorld(worldUuid) ?: throw IllegalStateException("World $worldUuid is unloaded")
-            return world.getBlockAt(x, y, z)
+            return world.getBlockAt(x, y, z).takeIf { it.state is BlockInventoryHolder } ?: throw IllegalStateException("Block at position ${formattedLocation()} is not a BlockInventoryHolder!")
         }
 
     val contents: Inventory
@@ -76,7 +77,7 @@ class Storage(block: Block, val acceptMaterials: Set<Material>) {
 }
 
 //fun Location.toStorage(): Storage {
-//    val world = world ?: throw IllegalStateException("Location world is null, ChestLoc cannot hold null worlds")
+//    val world = world ?: throw IllegalStateException("Location world is null, Storage cannot hold null worlds")
 //    val block = world.getBlockAt(blockX, blockY, blockZ).takeIf { it.state is BlockInventoryHolder } ?: throw IllegalStateException("Block at position ${formattedString()} is not an BlockInventoryHolder, which means it was NOT removed when it was broken, report this")
 //    return Storage(block)
 //}

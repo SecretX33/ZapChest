@@ -12,6 +12,10 @@ data class Group(
     val receivers: Set<Storage> = emptySet(),
 ) {
 
+    init { require(owner !in members) { "group owner cannot be inside members list" } }
+
+    val mapKey = name to owner.uniqueId
+
     fun receiversFor(material: Material): Set<Storage> = receivers.filterTo(HashSet()) { material in it.acceptMaterials }
 
     override fun equals(other: Any?): Boolean {

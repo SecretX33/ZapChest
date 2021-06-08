@@ -21,14 +21,16 @@ class GroupInviteManager (
     fun acceptInvite(player: Player, groupName: String): GroupJoinResponse {
         val group = invites.getIfPresent(Pair(player.uniqueId, groupName))
             ?.takeIf { it.first > System.currentTimeMillis() }?.second
-            ?: return GroupJoinResponse.NON_EXISTENT
+            ?: return GroupJoinResponse(GroupJoinResponse.Reason.NON_EXISTENT, null)
 
         invites.invalidate(player.uniqueId)
-        if(!groupRepo.hasGroup(group)) return GroupJoinResponse.GROUP_REMOVED
+        if(!groupRepo.hasGroup(group)) return GroupJoinResponse(GroupJoinResponse.Reason.GROUP_REMOVED, group)
 
         groupRepo.addMemberToGroup(player, group)
-        return GroupJoinResponse.JOINED
+        return GroupJoinResponse(GroupJoinResponse.Reason.JOINED, group)
     }
+
+    fun getAllInvites(player: Player): List<String> = invites.asMap().filter { it.key.first == player.uniqueId && it.value.first > System.currentTimeMillis() }.map { it.key.second }
 
     private companion object {
         const val GRACE_TIME = 20000L
