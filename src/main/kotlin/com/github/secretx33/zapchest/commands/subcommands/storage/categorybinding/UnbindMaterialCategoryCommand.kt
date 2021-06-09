@@ -1,4 +1,4 @@
-package com.github.secretx33.zapchest.commands.subcommands.storage
+package com.github.secretx33.zapchest.commands.subcommands.storage.categorybinding
 
 import arrow.core.getOrElse
 import com.github.secretx33.zapchest.commands.subcommands.PlayerSubCommand
@@ -22,7 +22,7 @@ class UnbindMaterialCategoryCommand(
 
     override val name: String = "unbindmaterialcategory"
     override val permission: String = "groups.create"
-    override val aliases: Set<String> = setOf(name, "unbindcategory", "umc", "uc")
+    override val aliases: Set<String> = setOf(name, "unbindcategory", "unbindc", "umc", "uc")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         if(strings.size < 3) {
@@ -67,6 +67,14 @@ class UnbindMaterialCategoryCommand(
     }
 
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> {
-        TODO("Not yet implemented")
+        if(sender !is Player || length < 2) return emptyList()
+
+        if(length == 2) return groupRepo.getGroupsThatPlayerOwns(sender)
+            .filter { it.name.startsWith(hint, ignoreCase = true) }
+            .map { it.name }
+
+        val typedCategories = strings.toList().subList(2, strings.lastIndex)
+
+        return MaterialCategory.categoryToMaterial.keySet().filter { typedCategories.none { typed -> typed.equals(it, ignoreCase = true) } && it.startsWith(hint, ignoreCase = true) }
     }
 }

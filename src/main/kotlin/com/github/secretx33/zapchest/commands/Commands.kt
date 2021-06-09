@@ -1,15 +1,19 @@
 package com.github.secretx33.zapchest.commands
 
-import com.github.secretx33.zapchest.commands.subcommands.ReloadCommand
 import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.general.ReloadCommand
 import com.github.secretx33.zapchest.commands.subcommands.group.CreateGroupCommand
 import com.github.secretx33.zapchest.commands.subcommands.group.ListGroupsCommand
 import com.github.secretx33.zapchest.commands.subcommands.invite.AcceptInviteCommand
 import com.github.secretx33.zapchest.commands.subcommands.invite.InviteMembersCommand
-import com.github.secretx33.zapchest.commands.subcommands.storage.AddReceiverCommand
-import com.github.secretx33.zapchest.commands.subcommands.storage.AddSenderCommand
-import com.github.secretx33.zapchest.commands.subcommands.storage.BindMaterialCategoryCommand
-import com.github.secretx33.zapchest.commands.subcommands.storage.UnbindMaterialCategoryCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.addremove.AddReceiverCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.addremove.AddSenderCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.addremove.RemoveReceiverCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.addremove.RemoveSenderCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.categorybinding.BindMaterialCategoryCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.categorybinding.UnbindMaterialCategoryCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.materialbinding.BindMaterialsCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.materialbinding.UnbindMaterialsCommand
 import com.github.secretx33.zapchest.util.other.CustomKoinComponent
 import com.github.secretx33.zapchest.util.other.get
 import org.bukkit.command.Command
@@ -32,6 +36,10 @@ class Commands(plugin: JavaPlugin) : CommandExecutor, TabCompleter, CustomKoinCo
         // storage
         AddReceiverCommand(get(), get()),
         AddSenderCommand(get(), get()),
+        RemoveReceiverCommand(get(), get()),
+        RemoveSenderCommand(get(), get()),
+        BindMaterialsCommand(get(), get(), get()),
+        UnbindMaterialsCommand(get(), get(), get()),
         BindMaterialCategoryCommand(get(), get()),
         UnbindMaterialCategoryCommand(get(), get()),
         // general

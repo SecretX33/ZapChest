@@ -1,7 +1,7 @@
 package com.github.secretx33.zapchest.commands.subcommands.invite
 
 import arrow.core.getOrElse
-import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.PlayerSubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -16,10 +16,10 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class InviteMembersCommand(
-    private val messages: Messages,
+    messages: Messages,
     private val groupRepo: GroupRepo,
     private val groupInviteManager: GroupInviteManager,
-) : SubCommand() {
+) : PlayerSubCommand(messages) {
 
     override val name: String = "invitemembers"
     override val permission: String = "groups.inviteothers"
@@ -61,10 +61,6 @@ class InviteMembersCommand(
             groupInviteManager.createInvite(it, group)
             it.sendMessage(messages.get(MessageKeys.RECEIVED_INVITE_TO_GROUP).replace("<owner>", player.name).replace("<group>", group.name))
         }
-    }
-
-    override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {
-        sender.sendMessage(messages.get(MessageKeys.CONSOLE_CANNOT_USE))
     }
 
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> {

@@ -9,7 +9,7 @@ import java.util.Locale
 
 object MaterialCategory {
 
-    private val nonLegacyItemMaterials = Material.values().filterTo(EnumSet.noneOf(Material::class.java)) { !it.isAir && it.isItem && !it.name.startsWith("LEGACY") }
+    val nonLegacyItemMaterials = Material.values().filterTo(EnumSet.noneOf(Material::class.java)) { !it.isAir && it.isItem && !it.name.startsWith("LEGACY") }
 
     val categoryToMaterial: ImmutableSetMultimap<String, Material>
 
@@ -24,12 +24,14 @@ object MaterialCategory {
 
         val extraGroups = ImmutableSetMultimap.builder<String, Material>().apply {
 
-            val armorSuffixes = setOf("_helm", "_chestplate", "_boots", "_leggings")
+            val armorSuffixes = setOf("_helmet", "_chestplate", "_boots", "_leggings")
             val armors = nonLegacyItemMaterials.filter { material -> armorSuffixes.any { material.name.endsWith(it, ignoreCase = true) } }
             putAll("armors", armors)
 
             val swords = nonLegacyItemMaterials.filter { it.name.endsWith("_sword") }
             putAll("swords", swords)
+
+            putAll("all", nonLegacyItemMaterials)
         }.build()
 
         categoryToMaterial = ImmutableSetMultimap.builder<String, Material>().apply {

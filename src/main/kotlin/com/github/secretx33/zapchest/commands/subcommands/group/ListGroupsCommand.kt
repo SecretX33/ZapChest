@@ -1,6 +1,6 @@
 package com.github.secretx33.zapchest.commands.subcommands.group
 
-import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.PlayerSubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -13,9 +13,9 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 
 class ListGroupsCommand(
-    private val messages: Messages,
+    messages: Messages,
     private val groupRepo: GroupRepo,
-) : SubCommand() {
+) : PlayerSubCommand(messages) {
 
     override val name: String = "listgroups"
     override val permission: String = "groups.listgroups"
@@ -55,10 +55,6 @@ class ListGroupsCommand(
     private val ownerSuffix: Component get() = messages.get(MessageKeys.PLAYER_GROUP_LIST_OWNER_GROUP_SUFFIX)
 
     private val memberSuffix: Component get() = messages.get(MessageKeys.PLAYER_GROUP_LIST_MEMBER_OF_GROUP_SUFFIX)
-
-    override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {
-        sender.sendMessage(messages.get(MessageKeys.CONSOLE_CANNOT_USE))
-    }
 
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> = emptyList()
 }

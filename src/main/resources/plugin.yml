@@ -10,7 +10,7 @@ commands:
   zapchest:
     description: ${name}
     usage: /<command> <sub> [parameters]
-    aliases: [zc]
+    aliases: [zap, zc]
 
 permissions:
 

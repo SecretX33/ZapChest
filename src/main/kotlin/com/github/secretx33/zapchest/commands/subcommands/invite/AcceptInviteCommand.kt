@@ -1,6 +1,6 @@
 package com.github.secretx33.zapchest.commands.subcommands.invite
 
-import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.PlayerSubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -15,9 +15,9 @@ import org.bukkit.entity.Player
 import java.util.Locale
 
 class AcceptInviteCommand (
-    private val messages: Messages,
+    messages: Messages,
     private val groupInviteManager: GroupInviteManager,
-) : SubCommand() {
+) : PlayerSubCommand(messages) {
 
     override val name: String = "acceptinvite"
     override val permission: String = "groups.joinothers"
@@ -39,11 +39,7 @@ class AcceptInviteCommand (
         }
     }
 
-    private fun alertAboutNewMember(
-        player: Player,
-        groupName: String,
-        response: GroupJoinResponse
-    ) {
+    private fun alertAboutNewMember(player: Player, groupName: String, response: GroupJoinResponse) {
         player.sendMessage(messages.get(MessageKeys.SUCCESSFULLY_JOINED_GROUP).replace("<group>", groupName))
         val group = response.group ?: return
         val message = messages.get(MessageKeys.PLAYER_JOINED_GROUP).replace("<player>", player.name)
@@ -54,14 +50,8 @@ class AcceptInviteCommand (
             .forEach { it.sendMessage(message) }
     }
 
-    override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {
-        sender.sendMessage(messages.get(MessageKeys.CONSOLE_CANNOT_USE))
-    }
-
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> {
         if(sender !is Player || length != 2) return emptyList()
         return groupInviteManager.getAllInvites(sender).filter { it.startsWith(hint, ignoreCase = true) }
     }
-
-
 }

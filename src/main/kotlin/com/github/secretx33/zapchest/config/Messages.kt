@@ -47,14 +47,14 @@ class Messages(plugin: Plugin, logger: Logger, private val adventureMessage: Adv
 }
 
 enum class MessageKeys(val default: Any) {
-    ADDED_MATERIAL_CATEGORY_TO_RECEIVER("<#55FF55>Successfully added all materials of category <#ffffff><category><#55FF55> to receiver of group <#FFAA00><group>."),
-    REMOVED_MATERIAL_CATEGORY_OF_RECEIVER("<#55FF55>Successfully removed all materials of category <#ffffff><category><#55FF55> of receiver of group <#FFAA00><group>."),
     ADDED_BLOCK_AS_RECEIVER("<#55FF55>Successfully added block <block> as receiver of group <#FFAA00><group>."),
     ADDED_BLOCK_AS_SENDER("<#55FF55>Successfully added block <block> as sender of group <#FFAA00><group>."),
-    BLOCK_IS_NOT_A_RECEIVER_OF_GROUP("<#FF5555>The block you're currently aiming at (<block>) is not a receiver of group <#FFAA00><group><#FF5555>."),
+    ADDED_MATERIAL_CATEGORY_TO_RECEIVER("<#55FF55>Successfully added all materials of category <#ffffff><category><#55FF55> to receiver of group <#FFAA00><group>."),
+    ADDED_MATERIALS_TO_RECEIVER("<#55FF55>Successfully added the following materials to receiver of group <#FFAA00><group><#55FF55>: <#ffffff><materials><#55FF55>."),
     BLOCK_IS_ALREADY_RECEIVER("<#FF5555>The block you're currently aiming at (<block>) is already added as receiver of group <#FFAA00><group><#FF5555>."),
-    MATERIAL_CATEGORY_DOESNT_EXIST("<#FF5555>Material category <#FFAA00><category><#FF5555> doesn't exist>."),
     BLOCK_IS_ALREADY_SENDER("<#FF5555>The block you're currently aiming at (<block>) is already added as sender of group <#FFAA00><group><#FF5555>."),
+    BLOCK_IS_NOT_A_RECEIVER_OF_GROUP("<#FF5555>The block you're currently aiming at (<block>) is not a receiver of group <#FFAA00><group><#FF5555>."),
+    BLOCK_IS_NOT_A_SENDER_OF_GROUP("<#FF5555>The block you're currently aiming at (<block>) is not a sender of group <#FFAA00><group><#FF5555>."),
     BLOCK_IS_NOT_INVENTORY_HOLDER("<#FF5555>The block you're currently aiming at (<block>) cannot hold items, thus it cannot be added to any ZapChest group."),
     CANNOT_ADD_RECEIVER_AS_SENDER("<#FF5555>The block you're currently aiming at (<block>) is already added as receiver of group <#FFAA00><group><#FF5555>. If you want to add it as sender, please remove it first by using <#FFAA00>/zapchest removereceiver <group><#FF5555>."),
     CANNOT_ADD_SENDER_AS_RECEIVER("<#FF5555>The block you're currently aiming at (<block>) is already added as sender of group <#FFAA00><group><#FF5555>. If you want to add it as receiver, please remove it first by using <#FFAA00>/zapchest removesender <group><#FF5555>."),
@@ -66,6 +66,8 @@ enum class MessageKeys(val default: Any) {
     GROUP_WAS_DELETED("<#FF5555>Couldn't join ZapChest group <#FFAA00><group><#FF5555> because it was deleted."),
     INVITE_NOT_FOUND("<#FF5555>Invite for ZapChest group <#FFAA00><group><#FF5555> could not be found."),
     INVITED_PLAYERS_TO_GROUP("<#55FF55>Invited player(s) <#FFAA00><players><#55FF55> to group <#FFAA00><group><#55FF55>!"),
+    MATERIAL_CATEGORY_DOESNT_EXIST("<#FF5555>Material category <#FFAA00><category><#FF5555> doesn't exist>."),
+    MATERIAL_DOESNT_EXIST("<#FF5555>Material <#FFAA00><material><#FF5555> doesn't exist>, please verify if you typed its name correctly and try again."),
     PLAYER_ALREADY_IN_THAT_GROUP("<#FF5555>Player <#FFAA00><player><#FF5555> already belongs to group <#FFAA00><group><#FF5555>."),
     PLAYER_GROUP_LIST_MEMBER_OF_GROUP_SUFFIX("(member)"),
     PLAYER_GROUP_LIST_OWNER_GROUP_SUFFIX("(owner)"),
@@ -74,6 +76,10 @@ enum class MessageKeys(val default: Any) {
     PLAYER_JOINED_GROUP("<#55FF55>Player <#FFAA00><player><#55FF55> just joined ZapChest group <#FFAA00><group><#55FF55>!"),
     PLAYER_NOT_FOUND("<#FF5555>Player named <#FFAA00><player><#FF5555> could not be found."),
     RECEIVED_INVITE_TO_GROUP("<#2afab5><owner> invited you to join their ZapChest group <#FFAA00><group><#2afab5>\n[<#55FF55>**\\[accept\\]**](command: /zapchest acceptinvite <group>)"),
+    REMOVED_SENDER_OF_GROUP("<#55FF55>Successfully removed sender of group <#FFAA00><group>."),
+    REMOVED_RECEIVER_OF_GROUP("<#55FF55>Successfully removed receiver of group <#FFAA00><group>."),
+    REMOVED_MATERIAL_CATEGORY_OF_RECEIVER("<#55FF55>Successfully removed all materials of category <#ffffff><category><#55FF55> of receiver of group <#FFAA00><group>."),
+    REMOVED_MATERIALS_OF_RECEIVER("<#55FF55>Successfully removed the following materials of receiver of group <#FFAA00><group><#55FF55>: <#ffffff><materials><#55FF55>."),
     STORAGE_WAS_DESTROYED("<#FF5555>You just broke a Storage, as result it was unbounded from all groups it belonged."),
     SUCCESSFULLY_JOINED_GROUP("<#55FF55>You just joined ZapChest group <#FFAA00><group><#55FF55>.");
 

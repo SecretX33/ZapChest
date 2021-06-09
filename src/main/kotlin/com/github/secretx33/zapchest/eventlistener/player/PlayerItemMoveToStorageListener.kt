@@ -24,10 +24,13 @@ class PlayerItemMoveToStorageListener(
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private fun InventoryDragEvent.onItemDrag() {
+        println("0")
         val holder = view.topInventory.holder as? BlockInventoryHolder ?: return
+        println("1")
         val player = whoClicked as? Player ?: return
         // no item was dragged on top inventory
         if(!isDragOnTopInventory()) return
+        println("2")
         // perform item move tasks
         runSync(plugin, 50L) { player.parseItemMove(holder) }
     }

@@ -1,5 +1,6 @@
-package com.github.secretx33.zapchest.commands.subcommands
+package com.github.secretx33.zapchest.commands.subcommands.general
 
+import com.github.secretx33.zapchest.commands.subcommands.SubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.util.extension.sendMessage

@@ -1,7 +1,7 @@
-package com.github.secretx33.zapchest.commands.subcommands.storage
+package com.github.secretx33.zapchest.commands.subcommands.storage.categorybinding
 
 import arrow.core.getOrElse
-import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.PlayerSubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -16,13 +16,13 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.BlockInventoryHolder
 
 class BindMaterialCategoryCommand(
-    private val messages: Messages,
+    messages: Messages,
     private val groupRepo: GroupRepo,
-) : SubCommand() {
+) : PlayerSubCommand(messages) {
 
     override val name: String = "bindmaterialcategory"
     override val permission: String = "groups.create"
-    override val aliases: Set<String> = setOf(name, "bindcategory", "bmc", "bc")
+    override val aliases: Set<String> = setOf(name, "bindcategory", "bindc", "bmc", "bc")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         if(strings.size < 3) {
@@ -66,10 +66,6 @@ class BindMaterialCategoryCommand(
             .replace("<group>", group.name))
     }
 
-    override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {
-        sender.sendMessage(messages.get(MessageKeys.CONSOLE_CANNOT_USE))
-    }
-
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> {
         if(sender !is Player || length < 2) return emptyList()
 
@@ -77,6 +73,8 @@ class BindMaterialCategoryCommand(
             .filter { it.name.startsWith(hint, ignoreCase = true) }
             .map { it.name }
 
-        return MaterialCategory.categoryToMaterial.keySet().filter { it.startsWith(hint, ignoreCase = true) }
+        val typedCategories = strings.toList().subList(2, strings.lastIndex)
+
+        return MaterialCategory.categoryToMaterial.keySet().filter { typedCategories.none { typed -> typed.equals(it, ignoreCase = true) } && it.startsWith(hint, ignoreCase = true) }
     }
 }

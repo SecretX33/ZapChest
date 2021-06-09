@@ -2,7 +2,7 @@ package com.github.secretx33.zapchest.commands.subcommands.group
 
 import arrow.core.None
 import arrow.core.Some
-import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.PlayerSubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -15,9 +15,9 @@ import org.bukkit.entity.Player
 import java.util.Locale
 
 class CreateGroupCommand(
-    private val messages: Messages,
+    messages: Messages,
     private val groupRepo: GroupRepo,
-) : SubCommand() {
+) : PlayerSubCommand(messages) {
 
     override val name: String = "creategroup"
     override val permission: String = "groups.create"
@@ -39,10 +39,6 @@ class CreateGroupCommand(
             is Some -> player.sendMessage(messages.get(MessageKeys.CANNOT_CREATE_GROUP_ALREADY_EXISTS)
                 .replace("<group>", groupName))
         }
-    }
-
-    override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {
-        sender.sendMessage(messages.get(MessageKeys.CONSOLE_CANNOT_USE))
     }
 
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> = when {

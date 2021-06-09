@@ -86,6 +86,20 @@ class GroupRepo (
         database.updateGroupReceivers(newGroup)
     }
 
+    fun removeSender(group: Group, holder: BlockInventoryHolder) {
+        val location = holder.inventory.location ?: throw IllegalArgumentException("Holder $holder inventory doesn't have a location defined")
+        val newGroup = group.copy(senders = group.senders.filter { !it.isAt(location) }.toSet())
+        groups[newGroup.mapKey] = newGroup
+        database.updateGroupSenders(newGroup)
+    }
+
+    fun removeReceiver(group: Group, holder: BlockInventoryHolder) {
+        val location = holder.inventory.location ?: throw IllegalArgumentException("Holder $holder inventory doesn't have a location defined")
+        val newGroup = group.copy(receivers = group.receivers.filter { !it.isAt(location) }.toSet())
+        groups[newGroup.mapKey] = newGroup
+        database.updateGroupReceivers(newGroup)
+    }
+
     fun unboundStorage(holder: BlockInventoryHolder) {
         val location = holder.inventory.location ?: return
         val holderGroups = (senders[location] + receivers[location]).mapNotNull { groups[it] }
@@ -122,6 +136,8 @@ class GroupRepo (
         val location = holder.inventory.location ?: throw IllegalArgumentException("Holder $holder inventory doesn't have a location defined")
         val originalReceiver = group.receivers.first { it.isAt(location) }
         val modifiedReceiver = originalReceiver.copy(acceptMaterials = originalReceiver.acceptMaterials + materials)
+        println("[bindmaterial] originalReceiver = $originalReceiver, mat = ${originalReceiver.acceptMaterials}")
+        println("[bindmaterial] modifiedReceiver = $modifiedReceiver, mat = ${modifiedReceiver.acceptMaterials}")
         updateGroupReceiver(group, originalReceiver, modifiedReceiver)
     }
 
@@ -129,12 +145,15 @@ class GroupRepo (
         val location = holder.inventory.location ?: throw IllegalArgumentException("Holder $holder inventory doesn't have a location defined")
         val originalReceiver = group.receivers.first { it.isAt(location) }
         val modifiedReceiver = originalReceiver.copy(acceptMaterials = originalReceiver.acceptMaterials - materials)
+        println("[unbindmaterial] originalReceiver = $originalReceiver, mat = ${originalReceiver.acceptMaterials}")
+        println("[unbindmaterial] modifiedReceiver = $modifiedReceiver, mat = ${modifiedReceiver.acceptMaterials}")
         updateGroupReceiver(group, originalReceiver, modifiedReceiver)
     }
 
     private fun updateGroupReceiver(group: Group, originalReceiver: Storage, modifiedReceiver: Storage) {
         val newReceivers = group.receivers - originalReceiver + modifiedReceiver
         val newGroup = group.copy(receivers = newReceivers)
+        groups[newGroup.mapKey] = newGroup
         database.updateGroupReceivers(newGroup)
     }
 }
