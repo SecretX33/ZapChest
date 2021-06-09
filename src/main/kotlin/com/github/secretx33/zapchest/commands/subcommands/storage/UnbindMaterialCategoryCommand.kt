@@ -1,7 +1,7 @@
 package com.github.secretx33.zapchest.commands.subcommands.storage
 
 import arrow.core.getOrElse
-import com.github.secretx33.zapchest.commands.subcommands.SubCommand
+import com.github.secretx33.zapchest.commands.subcommands.PlayerSubCommand
 import com.github.secretx33.zapchest.config.MessageKeys
 import com.github.secretx33.zapchest.config.Messages
 import com.github.secretx33.zapchest.config.replace
@@ -9,69 +9,64 @@ import com.github.secretx33.zapchest.config.toComponent
 import com.github.secretx33.zapchest.repository.GroupRepo
 import com.github.secretx33.zapchest.util.extension.formattedTypeName
 import com.github.secretx33.zapchest.util.extension.sendMessage
+import com.github.secretx33.zapchest.util.mapping.MaterialCategory
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.inventory.BlockInventoryHolder
 
-class AddSenderCommand(
-    private val messages: Messages,
+class UnbindMaterialCategoryCommand(
+    messages: Messages,
     private val groupRepo: GroupRepo,
-) : SubCommand() {
+) : PlayerSubCommand(messages) {
 
-    override val name: String = "addsender"
-    override val permission: String = "groups.addstorage"
-    override val aliases: Set<String> = setOf(name, "adds", "as")
+    override val name: String = "unbindmaterialcategory"
+    override val permission: String = "groups.create"
+    override val aliases: Set<String> = setOf(name, "unbindcategory", "umc", "uc")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
-        if(strings.size < 2) {
-            player.sendMessage("Usage: /$alias $name <group_name>".toComponent(NamedTextColor.RED))
+        if(strings.size < 3) {
+            player.sendMessage("Usage: /$alias $name <group_name> <category> [other_category]".toComponent(
+                NamedTextColor.RED))
             return
         }
-
+        // parse group
         val group = groupRepo.getGroup(player, strings[1]).getOrElse {
             player.sendMessage(messages.get(MessageKeys.GROUP_NOT_FOUND).replace("<group>", strings[1]))
             return
         }
 
+        // get targeted block
         val block = player.getTargetBlock(null, 10)
         val holder = block.state as? BlockInventoryHolder ?: run {
             player.sendMessage(messages.get(MessageKeys.BLOCK_IS_NOT_INVENTORY_HOLDER).replace("<block>", block.formattedTypeName()))
             return
         }
 
-        // if block is already a receiver of that group
-        if(groupRepo.hasReceiver(group, holder)) {
-            player.sendMessage(messages.get(MessageKeys.CANNOT_ADD_RECEIVER_AS_SENDER)
+        // if block is not a receiver of that group
+        if(!groupRepo.hasReceiver(group, holder)) {
+            player.sendMessage(messages.get(MessageKeys.BLOCK_IS_NOT_A_RECEIVER_OF_GROUP)
                 .replace("<block>", block.formattedTypeName())
                 .replace("<group>", group.name))
             return
         }
 
-        // if block is already a sender of that group
-        if(groupRepo.hasSender(group, holder)) {
-            player.sendMessage(messages.get(MessageKeys.BLOCK_IS_ALREADY_SENDER)
-                .replace("<block>", block.formattedTypeName())
-                .replace("<group>", group.name))
-            return
-        }
+        var categories = strings.toList().subList(2, strings.size)
 
-        // add block as sender to that group
-        groupRepo.addSender(group, block)
-        player.sendMessage(messages.get(MessageKeys.ADDED_BLOCK_AS_SENDER)
-            .replace("<block>", block.formattedTypeName())
+        // parse categories and warn user about invalid ones
+        categories.filter { !MaterialCategory.hasCategory(it) }.forEach {
+            player.sendMessage(messages.get(MessageKeys.MATERIAL_CATEGORY_DOESNT_EXIST).replace("<category>", it))
+        }
+        categories = categories.filter { MaterialCategory.hasCategory(it) }
+        val materials = categories.flatMap { MaterialCategory.getMaterials(it) }
+
+        groupRepo.removeMaterialsOfReceiver(group, holder, materials)
+        player.sendMessage(messages.get(MessageKeys.REMOVED_MATERIAL_CATEGORY_OF_RECEIVER)
+            .replace("<category>", categories.joinToString())
             .replace("<group>", group.name))
     }
 
-    override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {
-        sender.sendMessage(messages.get(MessageKeys.CONSOLE_CANNOT_USE))
-    }
-
     override fun getCompletor(sender: CommandSender, length: Int, hint: String, strings: Array<String>): List<String> {
-        if(sender !is Player || length != 2) return emptyList()
-
-        return groupRepo.getGroupsThatPlayerOwns(sender)
-            .filter { it.name.startsWith(hint, ignoreCase = true) }
-            .map { it.name }
+        TODO("Not yet implemented")
     }
 }

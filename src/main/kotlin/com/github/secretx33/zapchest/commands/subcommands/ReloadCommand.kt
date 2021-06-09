@@ -17,7 +17,7 @@ class ReloadCommand (
 
     override val name: String = "reload"
     override val permission: String = "reload"
-    override val aliases: List<String> = listOf(name, "rel", "r")
+    override val aliases: Set<String> = setOf(name, "rel", "r")
 
     private val reloadLock = Semaphore(1)
 

@@ -12,6 +12,7 @@ import com.github.secretx33.zapchest.util.extension.sendMessage
 import net.kyori.adventure.text.format.NamedTextColor
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import java.util.Locale
 
 class CreateGroupCommand(
     private val messages: Messages,
@@ -20,21 +21,20 @@ class CreateGroupCommand(
 
     override val name: String = "creategroup"
     override val permission: String = "groups.create"
-    override val aliases: List<String> = listOf(name, "create", "cg")
+    override val aliases: Set<String> = setOf(name, "create", "cg")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         if(strings.size < 2) {
             player.sendMessage("Usage: /$alias $name <group_name>".toComponent(NamedTextColor.RED))
             return
         }
-        val groupName = strings[1].substring(0, strings[1].length.coerceAtMost(40))
+        val groupName = strings[1].substring(0, strings[1].length.coerceAtMost(40)).lowercase(Locale.US)
         val group = groupRepo.getGroup(player, groupName)
 
         when(group) {
             is None -> {
                 groupRepo.createGroup(player, groupName)
-                player.sendMessage(messages.get(MessageKeys.CREATED_GROUP)
-                    .replace("<group>", groupName))
+                player.sendMessage(messages.get(MessageKeys.CREATED_GROUP).replace("<group>", groupName))
             }
             is Some -> player.sendMessage(messages.get(MessageKeys.CANNOT_CREATE_GROUP_ALREADY_EXISTS)
                 .replace("<group>", groupName))

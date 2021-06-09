@@ -22,8 +22,8 @@ class InviteMembersCommand(
 ) : SubCommand() {
 
     override val name: String = "invitemembers"
-    override val permission: String = "groups.addothers"
-    override val aliases: List<String> = listOf(name, "addm", "am")
+    override val permission: String = "groups.inviteothers"
+    override val aliases: Set<String> = setOf(name, "invitem", "im")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         if(strings.size < 3) {

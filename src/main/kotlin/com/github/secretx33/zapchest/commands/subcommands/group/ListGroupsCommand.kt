@@ -19,7 +19,7 @@ class ListGroupsCommand(
 
     override val name: String = "listgroups"
     override val permission: String = "groups.listgroups"
-    override val aliases: List<String> = listOf(name, "list", "lg")
+    override val aliases: Set<String> = setOf(name, "list", "lg")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         val groups = groupRepo.getGroupsThatPlayerBelongs(player)

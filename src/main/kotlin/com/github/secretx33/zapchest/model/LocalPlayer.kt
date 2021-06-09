@@ -4,6 +4,7 @@ import arrow.core.Option
 import arrow.core.toOption
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
+import java.util.Locale
 import java.util.UUID
 
 data class LocalPlayer(
@@ -23,4 +24,4 @@ data class LocalPlayer(
     override fun hashCode(): Int = uniqueId.hashCode()
 }
 
-fun Player.toLocalPlayer(): LocalPlayer = LocalPlayer(name, uniqueId)
+fun Player.toLocalPlayer(): LocalPlayer = LocalPlayer(name.lowercase(Locale.US), uniqueId)

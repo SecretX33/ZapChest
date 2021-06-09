@@ -47,9 +47,13 @@ class Messages(plugin: Plugin, logger: Logger, private val adventureMessage: Adv
 }
 
 enum class MessageKeys(val default: Any) {
+    ADDED_MATERIAL_CATEGORY_TO_RECEIVER("<#55FF55>Successfully added all materials of category <#ffffff><category><#55FF55> to receiver of group <#FFAA00><group>."),
+    REMOVED_MATERIAL_CATEGORY_OF_RECEIVER("<#55FF55>Successfully removed all materials of category <#ffffff><category><#55FF55> of receiver of group <#FFAA00><group>."),
     ADDED_BLOCK_AS_RECEIVER("<#55FF55>Successfully added block <block> as receiver of group <#FFAA00><group>."),
     ADDED_BLOCK_AS_SENDER("<#55FF55>Successfully added block <block> as sender of group <#FFAA00><group>."),
+    BLOCK_IS_NOT_A_RECEIVER_OF_GROUP("<#FF5555>The block you're currently aiming at (<block>) is not a receiver of group <#FFAA00><group><#FF5555>."),
     BLOCK_IS_ALREADY_RECEIVER("<#FF5555>The block you're currently aiming at (<block>) is already added as receiver of group <#FFAA00><group><#FF5555>."),
+    MATERIAL_CATEGORY_DOESNT_EXIST("<#FF5555>Material category <#FFAA00><category><#FF5555> doesn't exist>."),
     BLOCK_IS_ALREADY_SENDER("<#FF5555>The block you're currently aiming at (<block>) is already added as sender of group <#FFAA00><group><#FF5555>."),
     BLOCK_IS_NOT_INVENTORY_HOLDER("<#FF5555>The block you're currently aiming at (<block>) cannot hold items, thus it cannot be added to any ZapChest group."),
     CANNOT_ADD_RECEIVER_AS_SENDER("<#FF5555>The block you're currently aiming at (<block>) is already added as receiver of group <#FFAA00><group><#FF5555>. If you want to add it as sender, please remove it first by using <#FFAA00>/zapchest removereceiver <group><#FF5555>."),

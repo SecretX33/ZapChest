@@ -21,7 +21,7 @@ class AddReceiverCommand(
 
     override val name: String = "addreceiver"
     override val permission: String = "groups.addstorage"
-    override val aliases: List<String> = listOf(name, "addr", "ar")
+    override val aliases: Set<String> = setOf(name, "addr", "ar")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         if(strings.size < 2) {

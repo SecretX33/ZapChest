@@ -21,7 +21,7 @@ class AcceptInviteCommand (
 
     override val name: String = "acceptinvite"
     override val permission: String = "groups.joinothers"
-    override val aliases: List<String> = listOf(name, "accept", "ai")
+    override val aliases: Set<String> = setOf(name, "accept", "ai")
 
     override fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>) {
         if(strings.size < 2) {

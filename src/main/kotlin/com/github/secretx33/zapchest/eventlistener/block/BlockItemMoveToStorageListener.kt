@@ -22,6 +22,6 @@ class BlockItemMoveToStorageListener (
     private fun InventoryMoveItemEvent.onItemMove() {
         val holder = destination.holder as? BlockInventoryHolder ?: return
 
-        runSync(plugin, 50L) { storageManager.parseItemMove(holder) }
+        runSync(plugin, 50L) { storageManager.parseItemMove(holder, None) }
     }
 }

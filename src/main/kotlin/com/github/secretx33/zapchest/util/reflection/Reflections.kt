@@ -99,8 +99,8 @@ object Reflections {
 
     fun getCategory(material: Material): Option<String> {
         val nmsItem = CraftMagicNumbers.method("getItem", Material::class.java).invoke(null, material)
-        val craftCategory = NMS_Item.fields.first { NMS_CreativeModeTab.isAssignableFrom(it.type) }.apply { isAccessible = true }.get(nmsItem) ?: return None
-        val categoryName = NMS_CreativeModeTab.fields.first { it.type == String::class.java && Modifier.isFinal(it.modifiers) && Modifier.isPrivate(it.modifiers) }.get(craftCategory)
+        val craftCategory = NMS_Item.declaredFields.first { NMS_CreativeModeTab.isAssignableFrom(it.type) }.apply { isAccessible = true }.get(nmsItem) ?: return None
+        val categoryName = NMS_CreativeModeTab.declaredFields.first { it.type == String::class.java && Modifier.isFinal(it.modifiers) && Modifier.isPrivate(it.modifiers) }.apply { isAccessible = true }.get(craftCategory)
         return Option.fromNullable(categoryName as? String)
     }
 

@@ -9,15 +9,17 @@ import org.bukkit.block.Block
 import org.bukkit.block.DoubleChest
 import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.Inventory
+import java.util.EnumSet
 import java.util.Objects
 import java.util.UUID
 
-class Storage(block: Block, val acceptMaterials: Set<Material>) {
+class Storage(block: Block, acceptMaterials: Set<Material>) {
 
     val worldUuid: UUID = block.world.uid
     val x: Int
     val y: Int
     val z: Int
+    val acceptMaterials: Set<Material> = if(acceptMaterials.isEmpty()) emptySet() else acceptMaterials as? EnumSet<Material> ?: EnumSet.copyOf(acceptMaterials)
 
     init {
         require(block.state is BlockInventoryHolder) { "Block at position ${block.formattedLocation()} is not a BlockInventoryHolder" }

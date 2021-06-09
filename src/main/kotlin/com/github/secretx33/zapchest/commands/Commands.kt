@@ -8,6 +8,8 @@ import com.github.secretx33.zapchest.commands.subcommands.invite.AcceptInviteCom
 import com.github.secretx33.zapchest.commands.subcommands.invite.InviteMembersCommand
 import com.github.secretx33.zapchest.commands.subcommands.storage.AddReceiverCommand
 import com.github.secretx33.zapchest.commands.subcommands.storage.AddSenderCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.BindMaterialCategoryCommand
+import com.github.secretx33.zapchest.commands.subcommands.storage.UnbindMaterialCategoryCommand
 import com.github.secretx33.zapchest.util.other.CustomKoinComponent
 import com.github.secretx33.zapchest.util.other.get
 import org.bukkit.command.Command
@@ -21,12 +23,18 @@ import java.util.Locale
 class Commands(plugin: JavaPlugin) : CommandExecutor, TabCompleter, CustomKoinComponent {
 
     private val subcommands: Set<SubCommand> = setOf(
+        // group
         CreateGroupCommand(get(), get()),
         ListGroupsCommand(get(), get()),
+        // invite
         AcceptInviteCommand(get(), get()),
         InviteMembersCommand(get(), get(), get()),
+        // storage
         AddReceiverCommand(get(), get()),
         AddSenderCommand(get(), get()),
+        BindMaterialCategoryCommand(get(), get()),
+        UnbindMaterialCategoryCommand(get(), get()),
+        // general
         ReloadCommand(get()),
     )
 

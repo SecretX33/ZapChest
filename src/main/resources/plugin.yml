@@ -22,11 +22,11 @@ permissions:
       zapchest.groups.*: true
 
   zapchest.groups.*:
-    description: Gives access to all groups features.
+    description: Gives access to all zapchest groups features.
     default: false
     children:
       zapchest.groups.create: true
-      zapchest.groups.addothers: true
+      zapchest.groups.inviteothers: true
       zapchest.groups.joinothers: true
       zapchest.groups.listgroups: true
       zapchest.groups.addstorage: true
@@ -36,10 +36,10 @@ permissions:
     default: false
 
   zapchest.groups.create:
-    description: Allows one to create zap groups to link chests.
+    description: Allows one to create zapchest groups to link chests, as well as adding or removal material or material categories to/from owned groups.
     default: false
 
-  zapchest.groups.addothers:
+  zapchest.groups.inviteothers:
     description: Allows one to invite other people to join their groups.
     default: false
 

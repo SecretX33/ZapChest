@@ -16,7 +16,7 @@
 //
 //    override val name: String = "addstorage"
 //    override val permission: String = "groups.addstorage"
-//    override val aliases: List<String> = listOf(name, "adds", "as")
+//    override val aliases: Set<String> = setOf(name, "adds", "as")
 //
 //    override fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>) {
 //        sender.sendMessage(messages.get(MessageKeys.CONSOLE_CANNOT_USE))

@@ -8,7 +8,7 @@ abstract class SubCommand {
 
     abstract val name: String
     abstract val permission: String
-    abstract val aliases: List<String>
+    abstract val aliases: Set<String>
 
     abstract fun onCommandByPlayer(player: Player, alias: String, strings: Array<String>)
     abstract fun onCommandByConsole(sender: CommandSender, alias: String, strings: Array<String>)

@@ -14,7 +14,7 @@ class StorageManager(
     private val groupRepo: GroupRepo,
 ) {
 
-    fun parseItemMove(holder: BlockInventoryHolder, player: Option<Player> = None) {
+    fun parseItemMove(holder: BlockInventoryHolder, player: Option<Player>) {
         val inventory = holder.inventory
         val location = inventory.location ?: return
         val groups = groupRepo.getSenderGroupsAt(location).takeIf { it.isNotEmpty() }?.filterGroups(player)

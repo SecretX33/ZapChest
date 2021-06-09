@@ -268,6 +268,8 @@ class SQLite(plugin: Plugin, private val logger: Logger, private val config: Con
     @JvmName("serializeStorage")
     private fun Set<Storage>.serialize(): String = gson.toJson(this, storageSetTypeToken)
 
+    // Deserialization
+
     private fun String.toLocalPlayer(): LocalPlayer = gson.fromJson(this, LocalPlayer::class.java)
 
     private fun String.toLocalPlayerSet(): MutableSet<LocalPlayer> = gson.fromJson(this, localPlayerSetTypeToken)

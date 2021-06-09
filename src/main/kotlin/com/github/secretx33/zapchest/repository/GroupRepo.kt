@@ -15,7 +15,6 @@ import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.entity.Player
 import org.bukkit.inventory.BlockInventoryHolder
-import java.util.EnumSet
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
@@ -82,7 +81,7 @@ class GroupRepo (
 
     fun addReceiver(group: Group, block: Block) {
         require(block.state is BlockInventoryHolder) { "block needs to be BlockInventoryHolder, block = ${block.type} is not" }
-        val newGroup = group.copy(receivers = group.receivers + Storage(block, EnumSet.allOf(Material::class.java)))
+        val newGroup = group.copy(receivers = group.receivers + Storage(block, emptySet()))
         groups[newGroup.mapKey] = newGroup
         database.updateGroupReceivers(newGroup)
     }
@@ -102,7 +101,7 @@ class GroupRepo (
     }
 
     fun createGroup(player: Player, groupName: String) {
-        val group = Group(groupName, player.toLocalPlayer())
+        val group = Group(groupName.lowercase(Locale.US), player.toLocalPlayer())
         groups[group.mapKey] = group
         database.addStorageGroup(group)
     }
@@ -117,5 +116,25 @@ class GroupRepo (
         val newGroup = group.copy(members = group.members - player.toLocalPlayer())
         groups[group.mapKey] = newGroup
         database.updateGroupMembers(group)
+    }
+
+    fun addMaterialsToReceiver(group: Group, holder: BlockInventoryHolder, materials: Collection<Material>) {
+        val location = holder.inventory.location ?: throw IllegalArgumentException("Holder $holder inventory doesn't have a location defined")
+        val originalReceiver = group.receivers.first { it.isAt(location) }
+        val modifiedReceiver = originalReceiver.copy(acceptMaterials = originalReceiver.acceptMaterials + materials)
+        updateGroupReceiver(group, originalReceiver, modifiedReceiver)
+    }
+
+    fun removeMaterialsOfReceiver(group: Group, holder: BlockInventoryHolder, materials: Collection<Material>) {
+        val location = holder.inventory.location ?: throw IllegalArgumentException("Holder $holder inventory doesn't have a location defined")
+        val originalReceiver = group.receivers.first { it.isAt(location) }
+        val modifiedReceiver = originalReceiver.copy(acceptMaterials = originalReceiver.acceptMaterials - materials)
+        updateGroupReceiver(group, originalReceiver, modifiedReceiver)
+    }
+
+    private fun updateGroupReceiver(group: Group, originalReceiver: Storage, modifiedReceiver: Storage) {
+        val newReceivers = group.receivers - originalReceiver + modifiedReceiver
+        val newGroup = group.copy(receivers = newReceivers)
+        database.updateGroupReceivers(newGroup)
     }
 }
